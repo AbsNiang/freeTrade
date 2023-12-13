@@ -33,19 +33,16 @@ public class DatabaseHandling {
         }
     }
 
-    public static List<Stock> readFrom(){
+    public static int searchForStock(String stockName){
         List<Stock> stocks = new ArrayList<>();
         try{
             Connection connection = DriverManager.getConnection(dbURL);
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Stock");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Stock WHERE StockName = ?");
+            preparedStatement.setString(1, stockName);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
-                LocalDateTime purchaseDateTime = resultSet.getTimestamp("PurchaseDate").toLocalDateTime();
-                Stock stock = new Stock(resultSet.getString("StockName"),
-                        purchaseDateTime,
-                        resultSet.getDouble("PurchasePrice"));
-
-                stocks.add(stock);
+                System.out.println("found");
+                return resultSet.getInt("StockID");
             }
 
             // closing connections
@@ -56,7 +53,7 @@ public class DatabaseHandling {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return stocks;
+        return -1;
     }
 
     // returns the date of the most recent transaction, so we only get activities of past this date
@@ -80,7 +77,7 @@ public class DatabaseHandling {
         return LocalDateTime.MIN;
     }
     public static void main(String[] args){
-        test();
-        System.out.println(getWhenLastUpdated().toString());
+        System.out.println("id: " + searchForStock("filler"));
+        System.out.println("id: " + searchForStock("other"));
     }
 }

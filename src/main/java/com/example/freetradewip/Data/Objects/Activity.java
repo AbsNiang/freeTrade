@@ -19,11 +19,18 @@ public class Activity { // for CSV
     private double totalAmount;
     private String buySell; // if the stock has been bought or sold (empty if dividend)
 
+    // returns if the type is a type of dividend in client's case
     public static boolean isTypeOfDividend(String type){
         // excluding TOP_UP and MONTHLY_STATEMENT as these aren't transactions we want
         return "DIVIDEND".equals(type) || "ORDER".equals(type) ||
                 "PROPERTY".equals(type) || "CAPITAL".equals(type) || "INTEREST".equals(type) ||
                 "SPECIAL_DIVIDEND".equals(type);
+    }
+
+    // returns if it is a purchase or not (if not then it is a sale)
+    public static boolean isPurchase(String buySell){
+        //TODO: test needs to verify all ORDER's have either BUY or SELL
+        return "BUY".equals(buySell);
     }
 
     public Activity(String title, String type, LocalDateTime timestamp, double totalAmount, String buySell) {
