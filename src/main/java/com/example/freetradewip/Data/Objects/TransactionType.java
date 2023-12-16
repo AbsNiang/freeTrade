@@ -24,4 +24,16 @@ public enum TransactionType {
         }
         throw new IllegalArgumentException("No enum constant with typeString: " + input);
     }
+
+    public static TransactionType getActivityTypeAsTransactionType(Activity activity) {
+        if (Activity.isTypeOfDividend(activity.getType())) {
+            return TransactionType.DIVIDEND;
+        } else { // if it is an ORDER, need to check the BUY/SELL
+            if (Activity.isPurchase(activity.getBuySell())) {
+                return TransactionType.PURCHASE;
+            } else {
+                return TransactionType.SALE;
+            }
+        }
+    }
 }

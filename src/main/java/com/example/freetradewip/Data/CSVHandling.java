@@ -4,7 +4,6 @@ import com.example.freetradewip.Data.Objects.Activity;
 import com.opencsv.CSVReader;
 
 import java.io.FileReader;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.List;
 
 public class CSVHandling {
 
-    public static List<Activity> getActivityFromCSV(LocalDateTime lastUpdatedDateTime){
+    public static List<Activity> getActivityFromCSV(LocalDateTime lastUpdatedDateTime) {
         List<Activity> activities = new ArrayList<>();
         String csvPath = "D:/Programming/projects/freetradeWIP/activity-feed.csv";
         try (CSVReader reader = new CSVReader(new FileReader(csvPath))) {
@@ -21,7 +20,7 @@ public class CSVHandling {
 
             // gets the header names so that we can check for the correct things
             String[] columnHeaders = new String[0];
-            if (!rows.isEmpty()){
+            if (!rows.isEmpty()) {
                 columnHeaders = rows.get(0);
             } //TODO: exception if there is we reach else since should always have data: error with parsing
             int titleIndex = Arrays.asList(columnHeaders).indexOf("Title");
@@ -29,6 +28,7 @@ public class CSVHandling {
             int timestampIndex = Arrays.asList(columnHeaders).indexOf("Timestamp");
             int totalAmountIndex = Arrays.asList(columnHeaders).indexOf("Total Amount");
             int buySellIndex = Arrays.asList(columnHeaders).indexOf("Buy / Sell");
+            int quantityIndex = Arrays.asList(columnHeaders).indexOf("Quantity");
 
             // Create a DateTimeFormatter
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
@@ -42,14 +42,14 @@ public class CSVHandling {
 
                 // only want to record dividends or sales / purchases, and only if it hasn't been recorded yet
                 // TODO: add a test to check for any new types of activity type we don't account for
-                if (Activity.isTypeOfDividend(row[typeIndex]) && dateTime.isAfter(lastUpdatedDateTime)){
+                if (Activity.isTypeOfDividend(row[typeIndex]) && dateTime.isAfter(lastUpdatedDateTime)) {
                     Activity activity = new Activity(
                             row[titleIndex],
                             row[typeIndex],
                             dateTime,
                             Double.parseDouble(row[totalAmountIndex]),
-                            row[buySellIndex]
-                    );
+                            row[buySellIndex],
+                            Double.parseDouble(row[quantityIndex]));
                     activities.add(activity);
                 }
 
@@ -60,7 +60,7 @@ public class CSVHandling {
         return activities;
     }
 
-    public static void main(String[] args){
-
+    public static void main(String[] args) {
+        getActivityFromCSV(LocalDateTime.MIN);
     }
 }
