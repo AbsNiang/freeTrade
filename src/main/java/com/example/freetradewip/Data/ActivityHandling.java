@@ -33,9 +33,7 @@ public class ActivityHandling {
 
     // we store the stock in the DB (only reached if a purchase since otherwise stock will be a current stock)
     private static void addStockToDB(Activity activity) {
-        activity.setQuantity(0); // want to set it to 0 to not add the quantity twice
         DatabaseHandling.recordStock(Stock.parseStock(activity));
-        // initialises the stock w a quantity of 0 since we later add on the quantity
     }
 
 }

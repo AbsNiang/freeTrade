@@ -28,16 +28,4 @@ public class Utils {
             e.printStackTrace();
         }
     }
-
-    // updates the data in the DB (records any new activities)
-    public static void updateData() {
-        //? need to select all the data from the last date in the DB (so we don't have to check against old transactions)
-        //? with this data we store the 'new' activities in DB, and remove any stocks that have been sold
-
-        // date of when we last updated the DB with new activity
-        LocalDateTime lastUpdatedDateTime = DatabaseHandling.getWhenLastUpdated();
-        List<Activity> activities = CSVHandling.getActivityFromCSV(lastUpdatedDateTime); // recent list of activities
-
-
-    }
 }

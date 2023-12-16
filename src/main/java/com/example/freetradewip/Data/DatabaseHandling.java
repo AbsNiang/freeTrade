@@ -85,7 +85,7 @@ public class DatabaseHandling {
                              "VALUES (?, ?)")) {
 
             preparedStatement.setString(1, stock.getStockName());
-            preparedStatement.setDouble(2, stock.getQuantity());
+            preparedStatement.setDouble(2, 0);
 
             preparedStatement.executeUpdate(); // execute SQL
         } catch (Exception e) {
@@ -113,11 +113,22 @@ public class DatabaseHandling {
     // going to test all we've done so far:
     public static void main(String[] args) {
         LocalDateTime lastUpdated = getWhenLastUpdated();
-        List<Activity> activityList = CSVHandling.getActivityFromCSV(lastUpdated);
-        for (Activity activity : activityList) {
-            //ActivityHandling.addTransactionToDB(activity);
-        }
-
+        CSVHandling.saveActivitiesFromCSVToDB(lastUpdated);
     }
 
+
+    private static void test(){
+        try (Connection connection = DriverManager.getConnection(dbURL);
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "INSERT INTO Stock (StockName, Quantity) " +
+                             "VALUES (?, ?)")) {
+
+            preparedStatement.setString(1, "testname");
+            preparedStatement.setDouble(2, 1.22200332);
+
+            preparedStatement.executeUpdate(); // execute SQL
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

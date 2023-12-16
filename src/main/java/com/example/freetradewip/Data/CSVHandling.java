@@ -2,7 +2,6 @@ package com.example.freetradewip.Data;
 
 import com.example.freetradewip.Data.Objects.Activity;
 import com.example.freetradewip.Data.Objects.Transaction;
-import com.example.freetradewip.Data.Objects.TransactionType;
 import com.opencsv.CSVReader;
 
 import java.io.FileReader;
@@ -15,8 +14,7 @@ import java.util.List;
 
 public class CSVHandling {
 
-    public static List<Activity> getActivityFromCSV(LocalDateTime lastUpdatedDateTime) {
-        List<Activity> activities = new ArrayList<>();
+    public static void saveActivitiesFromCSVToDB(LocalDateTime lastUpdatedDateTime) {
         String csvPath = "D:/Programming/projects/freetradeWIP/activity-feed.csv";
         try (CSVReader reader = new CSVReader(new FileReader(csvPath))) {
             List<String[]> rows = reader.readAll(); // maps the csv data to a list of String[]
@@ -53,23 +51,16 @@ public class CSVHandling {
                             Double.parseDouble(row[totalAmountIndex]),
                             row[buySellIndex],
                             Double.parseDouble(row[quantityIndex]));
-                    activities.add(activity);
+                    ActivityHandling.addTransactionToDB(activity);
                 }
 
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return activities;
     }
 
     public static void main(String[] args) {
-        List<Activity> activities = getActivityFromCSV(LocalDateTime.MIN);
-        Collections.reverse(activities);
-        for (Activity activity:activities
-             ) {
-            Transaction transaction = Transaction.parseTransaction(activity);
-            System.out.println(transaction.getQuantity() + ", " + transaction.getTransaction().getTypeString());
-        }
+
     }
 }
