@@ -2,6 +2,7 @@ package com.example.freetradewip;
 
 import com.example.freetradewip.Data.DatabaseHandling;
 import com.example.freetradewip.Data.Objects.Stock;
+import com.example.freetradewip.Data.Objects.Transaction;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,11 +27,11 @@ public class HelloController {
     private TableColumn gainsTable_name;
 
     @FXML
-    public TableView dividendsTable;
+    public TableView<Transaction> dividendsTable;
     @FXML
-    private TableColumn dividendsTable_dividends;
+    private TableColumn<Transaction, String> dividendsTable_dividends;
     @FXML
-    private TableColumn dividendsTable_name;
+    private TableColumn<Transaction, String> dividendsTable_name;
 
     @FXML
     private TableView<Stock> stockTable;
@@ -57,6 +58,7 @@ public class HelloController {
 //    }
 
     private static ObservableList<Stock> stocksTableList = null;
+    private static ObservableList<Stock> dividendsTableList = null;
 
     @FXML
     private void viewStocks(ActionEvent actionEvent) {
@@ -80,12 +82,22 @@ public class HelloController {
         stocksPage.setVisible(false);
         gainLossPage.setVisible(false);
         dividendsPage.setVisible(true);
+        if (dividendsTableList == null){
+            setupDividendsTable();
+        }
     }
 
     private void setupStocksTable(){
         stocksTableList = DatabaseHandling.getCurrentStocks();
         stockTable_name.setCellValueFactory(new PropertyValueFactory<>("stockName"));
         stockTable_shares.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        stockTable.setItems(stocksTableList);
+    }
+
+    private void setupDividendsTable(){
+        dividendsTableList = DatabaseHandling.getDividends();
+        dividendsTable_name.setCellValueFactory(new PropertyValueFactory<>("stockName"));
+        dividendsTable_dividends.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         stockTable.setItems(stocksTableList);
     }
 }
