@@ -61,6 +61,9 @@ public class CSVHandling {
     }
 
     public static void main(String[] args) {
-        getActivityFromCSV(LocalDateTime.MIN);
+        List<Activity> activities = getActivityFromCSV(LocalDateTime.MIN);
+        for (int i = activities.size() - 1; i >= 0; i--) {
+            System.out.println(activities.get(i).getQuantity());
+        }
     }
 }

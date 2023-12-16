@@ -19,7 +19,6 @@ public class Activity { // for CSV
     private final double totalAmount;
     private final String buySell; // if the stock has been bought or sold (empty if dividend)
     private double quantity; // amount of stock activity relates to
-    private double pricePerShare;
 
     // returns if the type is a type of dividend in client's case
     public static boolean isTypeOfDividend(String type) {
