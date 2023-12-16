@@ -1,17 +1,44 @@
 package com.example.freetradewip;
 
+import com.example.freetradewip.Data.DatabaseHandling;
+import com.example.freetradewip.Data.Objects.Stock;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
-import javafx.stage.FileChooser;
-
-import java.io.File;
 
 public class HelloController {
-    public AnchorPane stocksPage;
-    public AnchorPane gainLossPage;
+    @FXML
+    private AnchorPane stocksPage;
+    @FXML
+    private AnchorPane gainLossPage;
+    @FXML
+    private AnchorPane dividendsPage;
+
+    @FXML
+    private TableView gainsTable;
+    @FXML
+    public TableColumn gainsTable_gain;
+    @FXML
+    private TableColumn gainsTable_name;
+
+    @FXML
+    public TableView dividendsTable;
+    @FXML
+    private TableColumn dividendsTable_dividends;
+    @FXML
+    private TableColumn dividendsTable_name;
+
+    @FXML
+    private TableView<Stock> stockTable;
+    @FXML
+    private TableColumn<Stock, String> stockTable_shares;
+    @FXML
+    private TableColumn<Stock, String> stockTable_name;
+
 
 //    @FXML
 //    private TableView<?> tableView;
@@ -29,15 +56,36 @@ public class HelloController {
 //        }
 //    }
 
+    private static ObservableList<Stock> stocksTableList = null;
+
     @FXML
-    public void viewStocks(ActionEvent actionEvent) {
+    private void viewStocks(ActionEvent actionEvent) {
         stocksPage.setVisible(true);
         gainLossPage.setVisible(false);
+        dividendsPage.setVisible(false);
+        if (stocksTableList == null){
+            setupStocksTable();
+        }
     }
 
     @FXML
-    public void viewGainLoss(ActionEvent actionEvent) {
+    private void viewGainLoss(ActionEvent actionEvent) {
         stocksPage.setVisible(false);
         gainLossPage.setVisible(true);
+        dividendsPage.setVisible(false);
+    }
+
+    @FXML
+    private void viewDividends(ActionEvent actionEvent) {
+        stocksPage.setVisible(false);
+        gainLossPage.setVisible(false);
+        dividendsPage.setVisible(true);
+    }
+
+    private void setupStocksTable(){
+        stocksTableList = DatabaseHandling.getCurrentStocks();
+        stockTable_name.setCellValueFactory(new PropertyValueFactory<>("stockName"));
+        stockTable_shares.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        stockTable.setItems(stocksTableList);
     }
 }

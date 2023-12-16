@@ -3,9 +3,13 @@ package com.example.freetradewip.Data;
 import com.example.freetradewip.Data.Objects.Activity;
 import com.example.freetradewip.Data.Objects.Stock;
 import com.example.freetradewip.Data.Objects.Transaction;
+import javafx.beans.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHandling {
@@ -110,10 +114,39 @@ public class DatabaseHandling {
         }
     }
 
+    // returns a list of stocks that have a quantity > 0
+    public static ObservableList<Stock> getCurrentStocks(){
+        ObservableList<Stock> stocks = FXCollections.observableArrayList();
+        try {
+            Connection connection = DriverManager.getConnection(dbURL);
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("SELECT * FROM Stock WHERE Quantity > 0");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                stocks.add(new Stock(
+                       resultSet.getString("StockName"),
+                       resultSet.getDouble("Quantity")
+                ));
+            }
+
+            // closing connections
+            preparedStatement.close();
+            resultSet.close();
+            connection.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return stocks;
+    }
+
     // going to test all we've done so far:
     public static void main(String[] args) {
-        LocalDateTime lastUpdated = getWhenLastUpdated();
-        CSVHandling.saveActivitiesFromCSVToDB(lastUpdated);
+//        LocalDateTime lastUpdated = getWhenLastUpdated();
+//        CSVHandling.saveActivitiesFromCSVToDB(lastUpdated);
+        for (Stock stock: getCurrentStocks()) {
+            System.out.println(stock.getStockName() +", " + stock.getQuantity());
+        }
     }
 
 
