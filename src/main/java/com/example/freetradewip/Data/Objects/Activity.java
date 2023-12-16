@@ -21,7 +21,7 @@ public class Activity { // for CSV
     private double quantity; // amount of stock activity relates to
 
     // returns if the type is a type of dividend in client's case
-    public static boolean isTypeOfDividend(String type) {
+    public static boolean isTypeOfDividendOrOrder(String type) {
         // excluding TOP_UP and MONTHLY_STATEMENT as these aren't transactions we want
         return "DIVIDEND".equals(type) || "ORDER".equals(type) ||
                 "PROPERTY".equals(type) || "CAPITAL".equals(type) || "INTEREST".equals(type) ||

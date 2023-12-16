@@ -1,6 +1,8 @@
 package com.example.freetradewip.Data;
 
 import com.example.freetradewip.Data.Objects.Activity;
+import com.example.freetradewip.Data.Objects.Transaction;
+import com.example.freetradewip.Data.Objects.TransactionType;
 import com.opencsv.CSVReader;
 
 import java.io.FileReader;
@@ -8,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CSVHandling {
@@ -42,7 +45,7 @@ public class CSVHandling {
 
                 // only want to record dividends or sales / purchases, and only if it hasn't been recorded yet
                 // TODO: add a test to check for any new types of activity type we don't account for
-                if (Activity.isTypeOfDividend(row[typeIndex]) && dateTime.isAfter(lastUpdatedDateTime)) {
+                if (Activity.isTypeOfDividendOrOrder(row[typeIndex]) && dateTime.isAfter(lastUpdatedDateTime)) {
                     Activity activity = new Activity(
                             row[titleIndex],
                             row[typeIndex],
@@ -62,8 +65,11 @@ public class CSVHandling {
 
     public static void main(String[] args) {
         List<Activity> activities = getActivityFromCSV(LocalDateTime.MIN);
-        for (int i = activities.size() - 1; i >= 0; i--) {
-            System.out.println(activities.get(i).getQuantity());
+        Collections.reverse(activities);
+        for (Activity activity:activities
+             ) {
+            Transaction transaction = Transaction.parseTransaction(activity);
+            System.out.println(transaction.getQuantity() + ", " + transaction.getTransaction().getTypeString());
         }
     }
 }

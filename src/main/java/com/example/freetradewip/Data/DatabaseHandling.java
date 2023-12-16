@@ -45,6 +45,7 @@ public class DatabaseHandling {
                 if (resultSet.next()) {
                     java.sql.Timestamp mostRecentDate = resultSet.getTimestamp("MostRecentDate");
                     if (mostRecentDate != null) {
+                        System.out.println("Last transaction was: " + mostRecentDate);
                         return mostRecentDate.toLocalDateTime();
                     }
                 }
@@ -52,7 +53,7 @@ public class DatabaseHandling {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("No transactions found.");
+        System.out.println("No last transaction");
         return LocalDateTime.MIN;
     }
 
@@ -94,7 +95,7 @@ public class DatabaseHandling {
 
     // adds the quantity to add with the quantity stored in the record for that stock
     public static void updateCurrentQuantity(String stockName, double quantityToAdd) {
-        String updateQuery = "UPDATE Stock SET CurrentQuantity = CurrentQuantity + ? WHERE StockName = ?";
+        String updateQuery = "UPDATE Stock SET Quantity = Quantity + ? WHERE StockName = ?";
 
         try (Connection connection = DriverManager.getConnection(dbURL);
              PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
@@ -102,13 +103,7 @@ public class DatabaseHandling {
             preparedStatement.setDouble(1, quantityToAdd);
             preparedStatement.setString(2, stockName);
 
-            int rowsAffected = preparedStatement.executeUpdate();
-
-            if (rowsAffected > 0) {
-                System.out.println("Current quantity updated successfully.");
-            } else {
-                System.out.println("No rows updated. Stock not found?");
-            }
+            preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -119,8 +114,8 @@ public class DatabaseHandling {
     public static void main(String[] args) {
         LocalDateTime lastUpdated = getWhenLastUpdated();
         List<Activity> activityList = CSVHandling.getActivityFromCSV(lastUpdated);
-        for (Activity activity:activityList) {
-            ActivityHandling.addTransactionToDB(activity);
+        for (Activity activity : activityList) {
+            //ActivityHandling.addTransactionToDB(activity);
         }
 
     }

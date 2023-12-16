@@ -26,7 +26,7 @@ public enum TransactionType {
     }
 
     public static TransactionType getActivityTypeAsTransactionType(Activity activity) {
-        if (Activity.isTypeOfDividend(activity.getType())) {
+        if (!"ORDER".equals(activity.getType())) {
             return TransactionType.DIVIDEND;
         } else { // if it is an ORDER, need to check the BUY/SELL
             if (Activity.isPurchase(activity.getBuySell())) {
