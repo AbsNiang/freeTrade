@@ -5,9 +5,10 @@ module com.example.freetradewip {
     requires ucanaccess;
     requires com.opencsv;
 
-
     opens com.example.freetradewip to javafx.fxml;
+    opens com.example.freetradewip.Data to javafx.fxml; // Open Data package
+    opens com.example.freetradewip.Data.Objects to javafx.fxml; // Open Objects package
     exports com.example.freetradewip;
     exports com.example.freetradewip.Data;
-    opens com.example.freetradewip.Data to javafx.fxml;
+    exports com.example.freetradewip.Data.Objects; // Export Objects package
 }

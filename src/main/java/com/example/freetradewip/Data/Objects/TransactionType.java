@@ -15,16 +15,6 @@ public enum TransactionType {
         return typeString;
     }
 
-    // Method to get TransactionType from a string
-    public static TransactionType fromString(String input) {
-        for (TransactionType type : TransactionType.values()) {
-            if (type.getTypeString().equalsIgnoreCase(input)) {
-                return type;
-            }
-        }
-        throw new IllegalArgumentException("No enum constant with typeString: " + input);
-    }
-
     public static TransactionType getActivityTypeAsTransactionType(Activity activity) {
         if (!"ORDER".equals(activity.getType())) {
             return TransactionType.DIVIDEND;
