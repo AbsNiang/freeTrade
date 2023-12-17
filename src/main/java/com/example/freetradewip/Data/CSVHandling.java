@@ -14,8 +14,7 @@ import java.util.List;
 
 public class CSVHandling {
 
-    public static void saveActivitiesFromCSVToDB(LocalDateTime lastUpdatedDateTime) {
-        String csvPath = "D:/Programming/projects/freetradeWIP/activity-feed.csv";
+    public static void saveActivitiesFromCSVToDB(LocalDateTime lastUpdatedDateTime, String csvPath) {
         try (CSVReader reader = new CSVReader(new FileReader(csvPath))) {
             List<String[]> rows = reader.readAll(); // maps the csv data to a list of String[]
 

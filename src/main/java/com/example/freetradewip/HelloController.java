@@ -1,5 +1,6 @@
 package com.example.freetradewip;
 
+import com.example.freetradewip.Data.CSVHandling;
 import com.example.freetradewip.Data.DatabaseHandling;
 import com.example.freetradewip.Data.GainLoss;
 import com.example.freetradewip.Data.Objects.Stock;
@@ -8,13 +9,12 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.function.Predicate;
 
@@ -26,6 +26,8 @@ public class HelloController {
     public Label gainTotal;
     @FXML
     public ComboBox<String> fiscalYearSelector;
+    @FXML
+    public Button update_tables;
     @FXML
     private AnchorPane stocksPage;
     @FXML
@@ -59,23 +61,20 @@ public class HelloController {
     private TableColumn<Stock, String> stockTable_name;
 
 
-//    @FXML
-//    private TableView<?> tableView;
-//
-//    @FXML
-//    private void handleOpenFile(ActionEvent event) {
-//        FileChooser fileChooser = new FileChooser();
-//        fileChooser.setTitle("Open Resource File");
-//
-//        // Show open dialog
-//        File selectedFile = fileChooser.showOpenDialog(null);
-//        if (selectedFile != null) {
-//            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-//            // Perform further processing with the selected file, if needed
-//        }
-//    }
+    @FXML
+    private void handleOpenFile(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
 
-    private static ObservableList<Stock> stocksTableList = null;
+        // Show open dialog
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+            CSVHandling.saveActivitiesFromCSVToDB(DatabaseHandling.getWhenLastUpdated(), selectedFile.getAbsolutePath());
+            initialize();
+        }
+    }
+
     private static ObservableList<Transaction> dividendsTableList = null;
     private static ObservableList<Transaction> gainLossTableList = null;
 
@@ -131,28 +130,28 @@ public class HelloController {
     }
 
     @FXML
-    private void viewStocks(ActionEvent actionEvent) {
+    private void viewStocks() {
         stocksPage.setVisible(true);
         gainLossPage.setVisible(false);
         dividendsPage.setVisible(false);
     }
 
     @FXML
-    private void viewGainLoss(ActionEvent actionEvent) {
+    private void viewGainLoss() {
         stocksPage.setVisible(false);
         gainLossPage.setVisible(true);
         dividendsPage.setVisible(false);
     }
 
     @FXML
-    private void viewDividends(ActionEvent actionEvent) {
+    private void viewDividends() {
         stocksPage.setVisible(false);
         gainLossPage.setVisible(false);
         dividendsPage.setVisible(true);
     }
 
     private void setupStocksTable() {
-        stocksTableList = DatabaseHandling.getCurrentStocks();
+        ObservableList<Stock> stocksTableList = DatabaseHandling.getCurrentStocks();
         stockTable_name.setCellValueFactory(new PropertyValueFactory<>("stockName"));
         stockTable_shares.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         stockTable.setItems(stocksTableList);
