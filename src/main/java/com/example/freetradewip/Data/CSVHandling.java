@@ -1,15 +1,12 @@
 package com.example.freetradewip.Data;
 
 import com.example.freetradewip.Data.Objects.Activity;
-import com.example.freetradewip.Data.Objects.Transaction;
 import com.opencsv.CSVReader;
 
 import java.io.FileReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class CSVHandling {

@@ -62,7 +62,7 @@ public class HelloController {
 
 
     @FXML
-    private void handleOpenFile(ActionEvent event) {
+    private void handleOpenFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
 
