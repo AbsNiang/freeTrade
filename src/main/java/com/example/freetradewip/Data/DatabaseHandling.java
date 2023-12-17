@@ -1,16 +1,13 @@
 package com.example.freetradewip.Data;
 
-import com.example.freetradewip.Data.Objects.Activity;
 import com.example.freetradewip.Data.Objects.Stock;
 import com.example.freetradewip.Data.Objects.Transaction;
-import javafx.beans.Observable;
+import com.example.freetradewip.Data.Objects.TransactionType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DatabaseHandling {
     // DB URL
@@ -142,11 +139,6 @@ public class DatabaseHandling {
 
     // going to test all we've done so far:
     public static void main(String[] args) {
-//        LocalDateTime lastUpdated = getWhenLastUpdated();
-//        CSVHandling.saveActivitiesFromCSVToDB(lastUpdated);
-        for (Stock stock: getCurrentStocks()) {
-            System.out.println(stock.getStockName() +", " + stock.getQuantity());
-        }
     }
 
 
@@ -164,4 +156,65 @@ public class DatabaseHandling {
             e.printStackTrace();
         }
     }
+
+    public static ObservableList<Transaction> getDividends() {
+        ObservableList<Transaction> transactions = FXCollections.observableArrayList();
+        try {
+            Connection connection = DriverManager.getConnection(dbURL);
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("SELECT * FROM Transaction WHERE Type = ?");
+            preparedStatement.setString(1, "Dividend");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                transactions.add(new Transaction(
+                        resultSet.getString("StockName"),
+                        resultSet.getTimestamp("TransactionDate").toLocalDateTime(),
+                        TransactionType.DIVIDEND,
+                        resultSet.getDouble("Amount"),
+                        resultSet.getDouble("Quantity")
+                ));
+            }
+
+            // closing connections
+            preparedStatement.close();
+            resultSet.close();
+            connection.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return transactions;
+    }
+
+    public static ObservableList<Transaction> getGainLossData() {
+        ObservableList<Transaction> transactions = FXCollections.observableArrayList();
+        try {
+            Connection connection = DriverManager.getConnection(dbURL);
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("SELECT * FROM Transaction WHERE Type IN (?, ?)");
+            preparedStatement.setString(1, "Sale");
+            preparedStatement.setString(2, "Purchase");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                transactions.add(new Transaction(
+                        resultSet.getString("StockName"),
+                        resultSet.getTimestamp("TransactionDate").toLocalDateTime(),
+                        TransactionType.fromString(resultSet.getString("Type")),
+                        resultSet.getDouble("Amount"),
+                        resultSet.getDouble("Quantity")
+                ));
+            }
+
+            // closing connections
+            preparedStatement.close();
+            resultSet.close();
+            connection.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return transactions;
+    }
+    
+
 }

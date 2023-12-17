@@ -4,6 +4,7 @@
 
 /* Button style */
 .button {
+    -fx-font-size: 15px;
     -fx-background-color: #3498db;
     -fx-text-fill: white;
     -fx-font-weight: bold;

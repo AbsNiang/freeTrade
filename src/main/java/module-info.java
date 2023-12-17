@@ -11,6 +11,4 @@ module com.example.freetradewip {
     exports com.example.freetradewip;
     exports com.example.freetradewip.Data;
     exports com.example.freetradewip.Data.Objects;
-    exports com.example.freetradewip.Data.Objects.DisplayObjects;
-    opens com.example.freetradewip.Data.Objects.DisplayObjects to javafx.fxml; // Export Objects package
 }
