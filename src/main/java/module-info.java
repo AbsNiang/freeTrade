@@ -4,6 +4,7 @@ module com.example.freetradewip {
     requires java.sql;
     requires ucanaccess;
     requires com.opencsv;
+    requires com.healthmarketscience.jackcess;
 
     opens com.example.freetradewip to javafx.fxml;
     opens com.example.freetradewip.Data to javafx.fxml; // Open Data package
